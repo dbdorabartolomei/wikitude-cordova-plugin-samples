@@ -38,27 +38,33 @@ var app = {
     },
     // --- Wikitude Plugin ---
     // Use this method to load a specific ARchitect World from either the local file system or a remote server
-    loadARchitectWorld: function(example) {
+    loadARchitectWorld: function(architectWorld) {
+
         // check if the current device is able to launch ARchitect Worlds
         app.wikitudePlugin.isDeviceSupported(function() {
             app.wikitudePlugin.setOnUrlInvokeCallback(app.onUrlInvoke);
-            // inject poi data using phonegap's GeoLocation API and inject data using World.loadPoisFromJsonData
-            if ( example.requiredExtension === "ObtainPoiDataFromApplicationModel" ) {
-                navigator.geolocation.getCurrentPosition(onLocationUpdated, onLocationError);
-            }
 
             app.wikitudePlugin.loadARchitectWorld(function successFn(loadedURL) {
-                /* Respond to successful world loading if you need to */
-            }, function errorFn(error) {
-                alert('Loading AR web view failed: ' + error);
-            },
-            example.path, example.requiredFeatures, example.startupConfiguration
+                    /* Respond to successful world loading if you need to */
+                }, function errorFn(error) {
+                    alert('Loading AR web view failed: ' + error);
+                },
+                architectWorld.path, architectWorld.requiredFeatures, architectWorld.startupConfiguration
             );
         }, function(errorMessage) {
             alert(errorMessage);
         },
-        example.requiredFeatures
+        architectWorld.requiredFeatures
         );
+    },
+    loadExampleARchitectWorld: function(example) {
+        // inject poi data using phonegap's GeoLocation API and inject data using World.loadPoisFromJsonData
+        if ( example.requiredExtension === "ObtainPoiDataFromApplicationModel" ) {
+            navigator.geolocation.getCurrentPosition(onLocationUpdated, onLocationError);
+        }
+
+        example.path = cordova.file.applicationDirectory + example.path;
+        app.loadARchitectWorld(example);
     },
     loadCustomARchitectWorldFromURL: function(url) {
         var world = {
