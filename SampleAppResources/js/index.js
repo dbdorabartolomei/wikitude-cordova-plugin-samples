@@ -43,6 +43,11 @@ var app = {
         // check if the current device is able to launch ARchitect Worlds
         app.wikitudePlugin.isDeviceSupported(function() {
             app.wikitudePlugin.setOnUrlInvokeCallback(app.onUrlInvoke);
+            
+            // set a callback for android that is called once the back button was clicked.
+            if ( cordova.platformId == "android" ) {
+                app.wikitudePlugin.setBackButtonCallback(app.onBackButton);
+            }
 
             app.wikitudePlugin.loadARchitectWorld(function successFn(loadedURL) {
                     /* Respond to successful world loading if you need to */
@@ -94,6 +99,9 @@ var app = {
         } else {
             alert(url + "not handled");
         }
+    },
+    onBackButton: function() {
+        alert('back button pressed');
     }
     // --- End Wikitude Plugin ---
 };
